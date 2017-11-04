@@ -23,6 +23,12 @@ window.onload = function () {
       inputNumberTotal: 0,
       remainingNotesC: 0,
       math: window.math,
+      selectedTime: '4/4',
+      options: [
+        { text: '4/4', value: '4/4' },
+        { text: '3/4', value: '3/4' },
+        { text: '2/4', value: '2/4' }
+      ]
     },
     methods: {
     	updateNumb: function() {
@@ -46,9 +52,14 @@ window.onload = function () {
         console.log("It still remain " + (4 - this.inputNumberTotal));
       },
 
-      remainingNotesCounter: function(value, remain) {
-        debugger;
-        this[remain] = (4 - this.inputNumberTotal) / value;
+      remainingNotesCounter: function(value) {
+        if(this.selectedTime === '4/4') {
+          return Math.floor((4 - this.inputNumberTotal) / value);
+        } else if (this.selectedTime === '3/4') {
+          return Math.floor((3 - this.inputNumberTotal) / value);
+        } else if (this.selectedTime === '2/4') {
+          return Math.floor((2 - this.inputNumberTotal) / value);
+        }
       },
 
       handler: function(variable, value, remain) {

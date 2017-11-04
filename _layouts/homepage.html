@@ -15,15 +15,22 @@
     <script src="js/vue-filter.min.js"></script>
     <script src="js/notes-counter.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
-    <title>Notes Calculator</title>
+    <title>Measure Notes Calculator</title>
   </head>
 
   <body>
     <div id="app">
       <div class="banner">
-        <h1 class="title">Musical Notes Calculator</h1>
+        <h1 class="title">Measure Notes Calculator</h1>
       </div>
       <div class="wrapper">
+        <div class="measure-container">
+          <div class="measure-filter"><span>Time&nbsp;</span>
+            <select v-model="selectedTime" class="measure-dropdown">
+              <option v-for="option in options" v-bind:value="option.value" v-text="option.text"></option>
+            </select>
+          </div>
+        </div>
         <div class="columns-container">
           <!-- COLUMN 1 -->
           <div class="column column--1">
@@ -37,7 +44,7 @@
                 <input type="number" min="0" v-model="inputNumberR" v-on:input="updateNumb" name="rondes" id="rondes" size="4" maxlength="10" />
                 <div class="value-button" id="increase" v-on:click="handler('inputNumberR')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 4 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(4)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -49,7 +56,7 @@
                 <input type="number" min="0" v-model="inputNumberB" v-on:input="updateNumb" name="blanches" id="blanches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="handler('inputNumberB')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 2 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -61,7 +68,7 @@
                 <input type="number" min="0" v-model="inputNumberN" v-on:input="updateNumb" name="noires" id="noires" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberN')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 1 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(1)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -73,7 +80,7 @@
                 <input type="number" min="0" v-model="inputNumberC" v-on:input="updateNumb" name="croches" id="croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="handler('inputNumberC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.5 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.5)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -85,7 +92,7 @@
                 <input type="number" min="0" v-model="inputNumberDC" v-on:input="updateNumb" name="double-croches" id="double-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberDC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.25 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.25)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -97,7 +104,7 @@
                 <input type="number" min="0" v-model="inputNumberTC" v-on:input="updateNumb" name="triple-croches" id="triple-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.125 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.125)"></div>
             </form>
           </div>
           <!-- COLUMN 2 -->
@@ -112,7 +119,7 @@
                 <input type="number" min="0" v-model="inputNumberRP" v-on:input="updateNumb" name="rondes-pointées" id="rondes-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberRP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (4 + 4/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(4 + 4/2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -124,7 +131,7 @@
                 <input type="number" min="0" v-model="inputNumberBP" v-on:input="updateNumb" name="blanches-pointées" id="blanches-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberBP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (2 + 2/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(2 + 2/2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -136,7 +143,7 @@
                 <input type="number" min="0" v-model="inputNumberNP" v-on:input="updateNumb" name="noires-pointées" id="noires-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberNP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (1 + 1/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(1 + 1/2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -148,7 +155,7 @@
                 <input type="number" min="0" v-model="inputNumberCP" v-on:input="updateNumb" name="croches-pointées" id="croches-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberCP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (0.5 + 0.5/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.5 + 0.5/2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -160,7 +167,7 @@
                 <input type="number" min="0" v-model="inputNumberDCP" v-on:input="updateNumb" name="doubles-croches-pointées" id="doubles-croches-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberDCP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (0.25 + 0.25/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.25 + 0.25/2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -172,7 +179,7 @@
                 <input type="number" min="0" v-model="inputNumberTCP" v-on:input="updateNumb" name="triple-croches-pointées" id="triple-croches-pointées" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTCP')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / (0.125 + 0.125/2) | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.125 + 0.125/2)"></div>
             </form>
           </div>
           <!-- COLUMN 3 -->
@@ -187,7 +194,7 @@
                 <input type="number" min="0" v-model="inputNumberTrioB" v-on:input="updateNumb" name="triolet-blanches" id="triolet-blanches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioB')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 4 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(4)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -199,7 +206,7 @@
                 <input type="number" min="0" v-model="inputNumberTrioN" v-on:input="updateNumb" name="triolet-noires" id="triolet-noires" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioN')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 2 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(2)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -211,7 +218,7 @@
                 <input type="number" min="0" v-model="inputNumberTrioC" v-on:input="updateNumb" name="triolet-croches" id="triolet-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 1 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(1)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -223,7 +230,7 @@
                 <input type="number" min="0" v-model="inputNumberTrioDC" v-on:input="updateNumb" name="triolet-doubles-croches" id="triolet-doubles-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioDC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.5 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.5)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -235,7 +242,7 @@
                 <input type="number" min="0" v-model="inputNumberTrioTC" v-on:input="updateNumb" name="triolet-triples-croches" id="triolet-triples-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioTC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.25 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.25)"></div>
             </form>
             <form>
               <div class="img-container">
@@ -247,13 +254,10 @@
                 <input type="number" min="0" v-model="inputNumberTrioQC" v-on:input="updateNumb" name="triolet-quadruples-croches" id="triolet-quadruples-croches" size="4" maxlength="10"/>
                 <div class="value-button" id="increase" v-on:click="increaseValue('inputNumberTrioQC')" value="IncreaseValue">+</div>
               </div>
-              <div class="remaining-notes">{{ (4 - inputNumberTotal) / 0.125 | floor }}</div>
+              <div class="remaining-notes" v-text="remainingNotesCounter(0.125)"></div>
             </form>
           </div>
         </div>
-        <!-- <p>You used {{inputNumberTotal}}</p>
-        <p v-if="4 - inputNumberTotal >= 0"> It still remain {{4 - inputNumberTotal}}</p>
-        <p v-if="4 - inputNumberTotal < 0"> It excess {{4 - inputNumberTotal}}</p> -->
       </div>
     </div>
 
