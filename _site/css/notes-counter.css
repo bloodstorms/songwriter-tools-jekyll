@@ -18,6 +18,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'essence-sans';
+  src: url('../fonts/ESSENCE-SANS-LIGHT.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html, body {
   margin: 0;
@@ -224,7 +230,7 @@ input[type=number] {
   color: #f2f1f0;
   letter-spacing: 1px;
   font-size: 60px;
-  font-family: 'Poiret One', cursive;
+  font-family: 'essence-sans', 'Poiret One', 'pt-sansregular', cursive;
 }
 
 @media screen and (max-width: 768px) {
