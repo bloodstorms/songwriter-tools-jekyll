@@ -20,7 +20,8 @@
 }
 @font-face {
   font-family: 'essence-sans';
-  src: url('../fonts/ESSENCE-SANS-LIGHT.ttf') format('truetype');
+  src: url('../fonts/ESSENCE-SANS-LIGHT.ttf') format('truetype'),
+       url('../fonts/PTS75F-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -208,8 +209,11 @@ input {
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance:textfield;
 }
 
 .banner {
